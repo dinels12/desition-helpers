@@ -7,13 +7,13 @@ This a CLI/Helper for the org Desition devs, to help making things more faster.
 > You can use NPM or Yarn
 
 ```js
-npm i @dinels/desition-cli
+npm i @dinels/desition-helpers
 ```
 
 or
 
 ```js
-yarn add @dinels/desition-cli
+yarn add @dinels/desition-helpers
 ```
 
 ## Usage
