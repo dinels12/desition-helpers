@@ -58,7 +58,7 @@ class GenerateFiles {
       modulesNames.push(formatedName);
       return row;
     });
-    rows.push(`export { ${modulesNames.join(', ')} };`);
+    rows.push(`\nexport { ${modulesNames.join(', ')} };`);
     await fs.writeFile(savePath, rows.join('\n'));
     return true;
   }
@@ -86,7 +86,48 @@ class GenerateFiles {
       modulesNames.push(formatedName);
       return row;
     });
-    rows.push(`export { ${modulesNames.join(', ')} };`);
+    rows.push(`\nexport { ${modulesNames.join(', ')} };`);
+    await fs.writeFile(savePath, rows.join('\n'));
+    return true;
+  }
+  async generateRoutes(
+    name: string,
+    exclude: string,
+    files: string[],
+    endpoint: string
+  ) {
+    const savePath = this.savePath + `/${name}`;
+    shell.mkdir('-p', this.savePath);
+    const rows: string[] = [];
+    rows.push('import { Router } from "express";');
+    const modulesNames: string[] = [];
+    files.forEach(line => {
+      let row = `import NAME from "LOCATION";`;
+      const index = line.lastIndexOf('/');
+
+      const name = line
+        .slice(index + 1)
+        .replace(`.routes${this.typeSuffix}`, '');
+      const formatedName = `${this.suffixStart ? this.suffixStart : ''}${
+        this.suffixStart
+          ? `${name.slice(0, 1).toUpperCase()}${name.slice(1)}`
+          : name
+      }${this.suffixEnd ? this.suffixEnd : ''}`;
+      row = row.replace(
+        /LOCATION/,
+        line.replace(exclude, '../').replace(this.typeSuffix, '')
+      );
+      row = row.replace(/NAME/, formatedName);
+      modulesNames.push(formatedName);
+      rows.push(row);
+    });
+    rows.push('\nconst router = Router();\n');
+
+    modulesNames.forEach(name => {
+      rows.push(`router.use("${endpoint}", ${name});`);
+    });
+
+    rows.push(`\nexport default router;\n`);
     await fs.writeFile(savePath, rows.join('\n'));
     return true;
   }
