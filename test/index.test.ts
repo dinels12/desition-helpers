@@ -28,7 +28,7 @@ describe('get interface files path', () => {
       files
     );
     expect(res).toBe(true);
-  }, 10000);
+  }, 20000);
 });
 
 describe('get model files path', () => {
@@ -44,5 +44,5 @@ describe('get model files path', () => {
       files
     );
     expect(res).toBe(true);
-  }, 10000);
+  }, 20000);
 });

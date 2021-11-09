@@ -1,5 +1,6 @@
 import glob from 'glob-promise';
 import fs from 'fs/promises';
+import shell from 'shelljs';
 
 interface GenerateFilesData {
   routePath: string;
@@ -34,6 +35,7 @@ class GenerateFiles {
     return glob(this.routePath);
   }
   async generateInterfaces(name: string, exclude: string, files: string[]) {
+    shell.mkdir('-p', this.savePath);
     const savePath = this.savePath + `/${name}`;
     const modulesNames: string[] = [];
     const rows = files.map(line => {
@@ -61,6 +63,7 @@ class GenerateFiles {
     return true;
   }
   async generateModels(name: string, exclude: string, files: string[]) {
+    shell.mkdir('-p', this.savePath);
     const savePath = this.savePath + `/${name}`;
     const modulesNames: string[] = [];
     const rows = files.map(line => {
